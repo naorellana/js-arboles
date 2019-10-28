@@ -1,0 +1,201 @@
+<!DOCTYPE html5>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="./css/bootstrap.css" >
+  <link rel="stylesheet" href="./css/vis-network.css" >
+
+  <title>Proyecto Final</title>
+</head>
+<body >
+  <div class="content">
+    <script src="./js/vis-network.min.js" ></script>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+        <a class="navbar-brand" href="#">Hidden brand</a>
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
+    <div class="">
+      <form>
+        <div class="row">
+          <div class="form-group col-6">
+            <label for="exampleInputEmail1">Grado: </label>
+            <input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Grado del arbol">
+          </div>
+          <div class="form-group col-6">
+            <label for="exampleInputPassword1">Altura</label>
+            <input type="number" class="form-control" id="exampleInputPassword1" placeholder="Altura del arbol">
+          </div>
+          <div class="form-group col-6">
+            <label for="exampleInputEmail1">Nodos</label>
+            <input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Cantidad de nodos">
+          </div>
+          <div class="form-group col-6">
+            <br>
+            <button type="submit" class="btn btn-primary">Dibujar arbol</button>
+          </div>
+        </div>
+      </form>
+    </div><br>
+
+
+
+
+    <div id="mynetwork" class="col-12" height="200px"></div>
+
+    <p>
+      <input type="button" id="btn-UD" value="Up-Down">
+      <input type="button" id="btn-DU" value="Down-Up">
+      <input type="button" id="btn-LR" value="Left-Right">
+      <input type="button" id="btn-RL" value="Right-Left">
+      <input type="hidden" id='direction' value="UD">
+    </p>
+    
+
+
+    <p id="selection"></p>
+
+  </div>
+  <script type="text/javascript">
+  var nodes = null;
+  var edges = null;
+  var network = null;
+  var directionInput = document.getElementById("direction");
+
+  function destroy() {
+    if (network !== null) {
+      network.destroy();
+      network = null;
+    }
+  }
+
+  function draw() {
+    destroy();
+    nodes = [];
+    edges = [];
+    var connectionCount = [];
+
+    // randomly create some nodes and edges
+    for (var i = 0; i < 15; i++) {
+      nodes.push({id: i, label: String(i)});
+    }
+    edges.push({from: 0, to: 1});
+    edges.push({from: 0, to: 6});
+    edges.push({from: 0, to: 13});
+    edges.push({from: 0, to: 11});
+    edges.push({from: 1, to: 2});
+    edges.push({from: 2, to: 3});
+    edges.push({from: 2, to: 4});
+    edges.push({from: 3, to: 5});
+    edges.push({from: 1, to: 10});
+    edges.push({from: 1, to: 7});
+    edges.push({from: 2, to: 8});
+    edges.push({from: 2, to: 9});
+    edges.push({from: 3, to: 14});
+    edges.push({from: 1, to: 12});
+    nodes[0]["level"] = 0;
+    nodes[1]["level"] = 1;
+    nodes[2]["level"] = 3;
+    nodes[3]["level"] = 4;
+    nodes[4]["level"] = 4;
+    nodes[5]["level"] = 5;
+    nodes[6]["level"] = 1;
+    nodes[7]["level"] = 2;
+    nodes[8]["level"] = 4;
+    nodes[9]["level"] = 4;
+    nodes[10]["level"] = 2;
+    nodes[11]["level"] = 1;
+    nodes[12]["level"] = 2;
+    nodes[13]["level"] = 1;
+    nodes[14]["level"] = 5;
+
+
+    // create a network
+    var container = document.getElementById('mynetwork');
+    var data = {
+      nodes: nodes,
+      edges: edges
+    };
+
+    var options = {
+      autoResize: true,
+      edges: {
+        smooth: {
+          type: 'cubicBezier',
+          forceDirection: (directionInput.value == "UD" || directionInput.value == "DU") ? 'vertical' : 'horizontal',
+          roundness: 0.4
+        }
+      },
+      layout: {
+        hierarchical: {
+          direction: directionInput.value
+        }
+      },
+      physics:false
+    };
+    network = new vis.Network(container, data, options);
+
+    // add event listeners
+    network.on('select', function (params) {
+      document.getElementById('selection').innerHTML = 'Selection: ' + params.nodes;
+    });
+  }
+
+  </script>
+  <script language="JavaScript">
+  var directionInput = document.getElementById("direction");
+  var btnUD = document.getElementById("btn-UD");
+  btnUD.onclick = function () {
+    directionInput.value = "UD";
+    draw();
+  };
+  var btnDU = document.getElementById("btn-DU");
+  btnDU.onclick = function () {
+    directionInput.value = "DU";
+    draw();
+  };
+  var btnLR = document.getElementById("btn-LR");
+  btnLR.onclick = function () {
+    directionInput.value = "LR";
+    draw();
+  };
+  var btnRL = document.getElementById("btn-RL");
+  btnRL.onclick = function () {
+    directionInput.value = "RL";
+    draw();
+  };
+
+  draw();
+  </script>
+
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="./js/bootstrap.js" ></script>
+  <script src="./js/vis-network.min.js" ></script>
+</body>
+</html>
