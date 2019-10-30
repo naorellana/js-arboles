@@ -141,6 +141,7 @@
     nodes[i]["level"] = iNivel;
     iNivel++;
     var padre=i;
+    
     i++;
     while ( i < nodos) {
     var iGrado=0;
@@ -149,34 +150,24 @@
         edges.push({from: padre, to: i});
         nodes[i]["level"] = iNivel;
         iGrado++;
+
         i++;
       }
-      padre=i-grado;
-      iNivel++;
-      /*if ((nodos-i + iNivel)> nivel  ) {
+      if (i-1 == Math.pow(grado, iNivel)){
+        console.log("i : ", i);
+          console.log("nivel : ", iNivel);
+
+          iNivel++;
+      }
+      padre++;
+
+      console.log("div: ", padre / 4);
+      if((padre / 4) === 1.25){
+        console.log("test: ", padre / 4);
+        console.log(i);
+      }
 
 
-
-    }*//*
-    else {
-    i++;
-    iNivel++;
-    padre=i-grado;
-    nodes.push({id: i, label: String(i)});
-    edges.push({from: padre, to: i});
-    nodes[i]["level"] = iNivel;
-    padre=i;
-  }*/
-
-  /*
-  i++;
-  iNivel++;
-  padre=i-grado;
-  nodes.push({id: i, label: String(i)});
-  edges.push({from: padre, to: i});
-  nodes[i]["level"] = iNivel;
-  padre=i;
-  i++;*/
 
 
 }
