@@ -135,7 +135,8 @@
     var connectionCount = [];
 
     // randomly create some nodes and edges
-    let iNivel=1;
+    let iNivel=0;
+    let iGrado=1;
 
     for (var i = 0; i <= nodos; i++) {
       nodes.push({id: i, label: String(i)});
@@ -150,8 +151,13 @@
 
         }*/
       }else {
-        edges.push({from: getRandomInt(1,grado), to: i});
-        nodes[i]["level"] = getRandomInt(iNivel +1, nivel);
+        if (iNivel<nivel) {
+          iNivel++
+          edges.push({from: i-1, to: i});
+
+        }
+        //edges.push({from: getRandomInt(grado,i-1), to: i});
+        nodes[i]["level"] = iNivel;
       }
 
 
