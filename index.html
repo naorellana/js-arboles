@@ -41,37 +41,61 @@
     <!-- menu de navegacion, por si fuera necesario  !-->
     <!-- Formulario de los parametros del arbol !-->
     <div class="">
-      <form>
+      <form  id="myform">
         <div class="row">
           <div class="form-group col-6">
-            <label for="exampleInputEmail1">Grado: </label>
-            <input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Grado del arbol">
+            <label for="nodos">Nodos</label>
+            <input type="number" class="form-control" min="1" oninput="whenInputsChange()" id="nodos" aria-describedby="emailHelp" placeholder="Cantidad de nodos">
           </div>
           <div class="form-group col-6">
-            <label for="exampleInputPassword1">Altura</label>
-            <input type="number" class="form-control" id="exampleInputPassword1" placeholder="Altura del arbol">
+            <label for="altura">Grado</label>
+            <input type="number" class="form-control" min="1" oninput="whenInputsChange()" id="grado" placeholder="Grado del arbol">
+            <small id="mGrado" class="form-text  text-warning"> </small>
           </div>
           <div class="form-group col-6">
-            <label for="exampleInputEmail1">Nodos</label>
-            <input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Cantidad de nodos">
+            <label for="altura">Niveles</label>
+            <input type="number" class="form-control" min="1" oninput="whenInputsChange()" id="altura" placeholder="Altura del arbol">
+            <small id="mAltura" class="form-text  text-warning"> </small>
           </div>
           <div class="form-group col-6">
             <br>
-            <button type="submit" class="btn btn-primary">Dibujar arbol</button>
+            <button type="button" onclick="obtenerValores()" class="btn btn-primary">Dibujar arbol</button>
           </div>
         </div>
       </form>
       <br>
     </div>
     <!-- Formulario de los parametros del arbol !-->
-
+    <script>
+    document.getElementById("myform").addEventListener("click", function(event){
+      event.preventDefault()
+    });
+    function obtenerValores() {
+      let nodos=document.getElementById("nodos").value;
+      let altura=document.getElementById("altura").value;
+      let grado=document.getElementById("grado").value;
+      //alert("The form was submitted " + nodos);
+      draw(nodos, altura,grado);
+    }
+    function whenInputsChange() {
+      var nodos = document.getElementById("nodos").value;
+      var grado = document.getElementById("grado").value;
+      console.log("grados: ", grado);
+      console.log("nodos: ", nodos);
+      document.getElementById("grado").setAttribute("max", nodos);
+      document.getElementById("mGrado").innerHTML = "El grado debe ser menor o igual: " + nodos;
+      let altura=nodos - (grado -1)
+      document.getElementById("altura").setAttribute("max", altura);
+      document.getElementById("mAltura").innerHTML = "La altura debe ser menor o igual: " + altura;
+    }
+    </script>
 
 
     <!-- seccion donde se va a dibujar el arbol !-->
     <div id="mynetwork" class="col-12" height="200px"></div>
     <!-- seccion donde se va a dibujar el arbol !-->
     <!-- Boton para mostrar el arbol en diferente alineacion !-->
-    <p>
+    <p class="d-none">
       <input type="button" id="btn-UD" value="Up-Down">
       <input type="button" id="btn-DU" value="Down-Up">
       <input type="button" id="btn-LR" value="Left-Right">
@@ -97,29 +121,54 @@
       network = null;
     }
   }
+  function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
-  function draw() {
+  function draw(nodos, nivel, grado) {
     destroy();
     nodes = [];
     edges = [];
+    letras= ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","U","V","W","X","Y","Z"];
     var connectionCount = [];
 
     // randomly create some nodes and edges
-    let nodos=10;
-    let nivel=4;
+    let iNivel=1;
+
     for (var i = 0; i <= nodos; i++) {
       nodes.push({id: i, label: String(i)});
+      nodes[0]["level"] = 0;
+      if (i<=grado && i>0) {
+          edges.push({from: 0, to: i});
+        nodes[i]["level"] = iNivel;
+        /*if (i % 2) {
+          edges.push({from: i-1, to: i+1});
+        }else {
+          edges.push({from: i, to: i+1});
+
+        }*/
+      }else {
+        edges.push({from: getRandomInt(1,grado), to: i});
+        nodes[i]["level"] = getRandomInt(iNivel +1, nivel);
+      }
+
+
+
     }
-    edges.push({from: 0, to: 1});
-    edges.push({from: 0, to: 2});
+    console.log ("Nodos: ", nodes);
+    console.log ("Aristas: ", edges);
+
+    /*edges.push({from: 0, to: 2});
     edges.push({from: 1, to: 3});
     edges.push({from: 1, to: 4});
     edges.push({from: 2, to: 5});
     edges.push({from: 2, to: 6});
     edges.push({from: 1, to: 7});
     edges.push({from: 2, to: 8});
-    edges.push({from: 8, to: 9});
-    nodes[0]["level"] = 0;
+    edges.push({from: 8, to: 9}); */
+    /*nodes[0]["level"] = 0;
     nodes[1]["level"] = 1;
     nodes[2]["level"] = 1;
     nodes[3]["level"] = 2;
@@ -129,7 +178,7 @@
     nodes[7]["level"] = 2;
     nodes[8]["level"] = 3;
     nodes[9]["level"] = nivel;
-    nodes[10]["level"] = nivel;
+    nodes[10]["level"] = nivel;*/
 
 
     // create a network
@@ -163,41 +212,41 @@
     });
   }
 
-  </script>
-  <!-- parte logica donde se dibujan los nodos, y  niveles del arbol !-->
+</script>
+<!-- parte logica donde se dibujan los nodos, y  niveles del arbol !-->
 
-  <script language="JavaScript">
-  var directionInput = document.getElementById("direction");
-  var btnUD = document.getElementById("btn-UD");
-  btnUD.onclick = function () {
-    directionInput.value = "UD";
-    draw();
-  };
-  var btnDU = document.getElementById("btn-DU");
-  btnDU.onclick = function () {
-    directionInput.value = "DU";
-    draw();
-  };
-  var btnLR = document.getElementById("btn-LR");
-  btnLR.onclick = function () {
-    directionInput.value = "LR";
-    draw();
-  };
-  var btnRL = document.getElementById("btn-RL");
-  btnRL.onclick = function () {
-    directionInput.value = "RL";
-    draw();
-  };
-
+<script language="JavaScript">
+var directionInput = document.getElementById("direction");
+var btnUD = document.getElementById("btn-UD");
+btnUD.onclick = function () {
+  directionInput.value = "UD";
   draw();
-  </script>
+};
+var btnDU = document.getElementById("btn-DU");
+btnDU.onclick = function () {
+  directionInput.value = "DU";
+  draw();
+};
+var btnLR = document.getElementById("btn-LR");
+btnLR.onclick = function () {
+  directionInput.value = "LR";
+  draw();
+};
+var btnRL = document.getElementById("btn-RL");
+btnRL.onclick = function () {
+  directionInput.value = "RL";
+  draw();
+};
 
 
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="./js/bootstrap.js" ></script>
-  <script src="./js/vis-network.min.js" ></script>
+</script>
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="./js/bootstrap.js" ></script>
+<script src="./js/vis-network.min.js" ></script>
 </body>
 </html>
