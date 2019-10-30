@@ -125,7 +125,7 @@
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+  }
 
   function draw(nodos, nivel, grado) {
     destroy();
@@ -135,88 +135,105 @@
     var connectionCount = [];
 
     // randomly create some nodes and edges
-    let iNivel=0;
-    let iGrado=1;
-
-    for (var i = 0; i <= nodos; i++) {
-      nodes.push({id: i, label: String(i)});
-      nodes[0]["level"] = 0;
-      if (i<=grado && i>0) {
-          edges.push({from: 0, to: i});
+    var iNivel=0;
+    var i=0;
+    nodes.push({id: i, label: String(i)});
+    nodes[i]["level"] = iNivel;
+    iNivel++;
+    var padre=i;
+    i++;
+    while ( i < nodos) {
+    var iGrado=0;
+      while (iGrado < grado) {
+        nodes.push({id: i, label: String(i)});
+        edges.push({from: padre, to: i});
         nodes[i]["level"] = iNivel;
-        /*if (i % 2) {
-          edges.push({from: i-1, to: i+1});
-        }else {
-          edges.push({from: i, to: i+1});
-
-        }*/
-      }else {
-        if (iNivel<nivel) {
-          iNivel++
-          edges.push({from: i-1, to: i});
-
-        }
-        //edges.push({from: getRandomInt(grado,i-1), to: i});
-        nodes[i]["level"] = iNivel;
+        iGrado++;
+        i++;
       }
+      padre=i-grado;
+      iNivel++;
+      /*if ((nodos-i + iNivel)> nivel  ) {
 
 
 
+    }*//*
+    else {
+    i++;
+    iNivel++;
+    padre=i-grado;
+    nodes.push({id: i, label: String(i)});
+    edges.push({from: padre, to: i});
+    nodes[i]["level"] = iNivel;
+    padre=i;
+  }*/
+
+  /*
+  i++;
+  iNivel++;
+  padre=i-grado;
+  nodes.push({id: i, label: String(i)});
+  edges.push({from: padre, to: i});
+  nodes[i]["level"] = iNivel;
+  padre=i;
+  i++;*/
+
+
+}
+console.log ("Nodos: ", nodes);
+console.log ("Aristas: ", edges);
+
+/*edges.push({from: 0, to: 2});
+edges.push({from: 1, to: 3});
+edges.push({from: 1, to: 4});
+edges.push({from: 2, to: 5});
+edges.push({from: 2, to: 6});
+edges.push({from: 1, to: 7});
+edges.push({from: 2, to: 8});
+edges.push({from: 8, to: 9}); */
+/*nodes[0]["level"] = 0;
+nodes[1]["level"] = 1;
+nodes[2]["level"] = 1;
+nodes[3]["level"] = 2;
+nodes[4]["level"] = 2;
+nodes[5]["level"] = 2;
+nodes[6]["level"] = 2;
+nodes[7]["level"] = 2;
+nodes[8]["level"] = 3;
+nodes[9]["level"] = nivel;
+nodes[10]["level"] = nivel;*/
+
+
+// create a network
+var container = document.getElementById('mynetwork');
+var data = {
+  nodes: nodes,
+  edges: edges
+};
+
+var options = {
+  autoResize: true,
+  edges: {
+    smooth: {
+      type: 'cubicBezier',
+      forceDirection: (directionInput.value == "UD" || directionInput.value == "DU") ? 'vertical' : 'horizontal',
+      roundness: 0.4
     }
-    console.log ("Nodos: ", nodes);
-    console.log ("Aristas: ", edges);
+  },
+  layout: {
+    hierarchical: {
+      direction: directionInput.value
+    }
+  },
+  physics:false
+};
+network = new vis.Network(container, data, options);
 
-    /*edges.push({from: 0, to: 2});
-    edges.push({from: 1, to: 3});
-    edges.push({from: 1, to: 4});
-    edges.push({from: 2, to: 5});
-    edges.push({from: 2, to: 6});
-    edges.push({from: 1, to: 7});
-    edges.push({from: 2, to: 8});
-    edges.push({from: 8, to: 9}); */
-    /*nodes[0]["level"] = 0;
-    nodes[1]["level"] = 1;
-    nodes[2]["level"] = 1;
-    nodes[3]["level"] = 2;
-    nodes[4]["level"] = 2;
-    nodes[5]["level"] = 2;
-    nodes[6]["level"] = 2;
-    nodes[7]["level"] = 2;
-    nodes[8]["level"] = 3;
-    nodes[9]["level"] = nivel;
-    nodes[10]["level"] = nivel;*/
-
-
-    // create a network
-    var container = document.getElementById('mynetwork');
-    var data = {
-      nodes: nodes,
-      edges: edges
-    };
-
-    var options = {
-      autoResize: true,
-      edges: {
-        smooth: {
-          type: 'cubicBezier',
-          forceDirection: (directionInput.value == "UD" || directionInput.value == "DU") ? 'vertical' : 'horizontal',
-          roundness: 0.4
-        }
-      },
-      layout: {
-        hierarchical: {
-          direction: directionInput.value
-        }
-      },
-      physics:false
-    };
-    network = new vis.Network(container, data, options);
-
-    // add event listeners
-    network.on('select', function (params) {
-      document.getElementById('selection').innerHTML = 'Selection: ' + params.nodes;
-    });
-  }
+// add event listeners
+network.on('select', function (params) {
+  document.getElementById('selection').innerHTML = 'Selection: ' + params.nodes;
+});
+}
 
 </script>
 <!-- parte logica donde se dibujan los nodos, y  niveles del arbol !-->
