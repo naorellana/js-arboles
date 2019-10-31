@@ -141,12 +141,13 @@
     nodes[i]["level"] = iNivel;
     iNivel++;
     var padre=i;
-    var nodMax=Math.pow(grado, iNivel);
-    let j=0;
+
+    var j=0;
     i++;
     while ( i < nodos) {
     var iGrado=0;
       while (iGrado < grado) {
+        var nodMax=Math.pow(grado, iNivel);
         nodes.push({id: i, label: String(i)});
         edges.push({from: padre, to: i});
         nodes[i]["level"] = iNivel;
@@ -156,18 +157,16 @@
 
       }
       console.log("j previo: ", j);
-      if (j ==nodMax) {
+      if (j === nodMax) {
         iNivel++;
         nodmax=Math.pow(grado, iNivel);
-        console.log("auemnto nivel ", j);
+        console.log("nodmax ", nodmax);
+        console.log("auemnto nivel ", iNivel);
+        j=0;
+
+
       }
       padre++;
-
-      console.log("div: ", padre / 4);
-      if((padre / 4) === 1.25){
-        console.log("test: ", padre / 4);
-        console.log("j: ", j);
-      }
 
 
 
