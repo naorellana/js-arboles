@@ -149,14 +149,26 @@
     var iGrado=0; // va aumentando de 0 hasta el grado de hijos que debe dibujar
       while (iGrado < grado) {
         var nodMax=Math.pow(grado, iNivel); // el maximo de nodos hijos es igual  la ptencia de: grado elevado al nivel actual
-        //nodes.push({id: i, label: String(i)});
-        nodes.push({id: nodoNumero, label: letras[nodoNumero]}); //dibuja los nodos
+        nodes.push({id: nodoNumero, label: String(nodoNumero)});
+        //nodes.push({id: nodoNumero, label: letras[nodoNumero]}); //dibuja los nodos
         edges.push({from: nodoPadre, to: nodoNumero }); // dibuja las aristas
         nodes[nodoNumero]["level"] = iNivel; // agrega nivel al nodo
         iGrado++; //auemneta desde cero hasta el nuero de grado
         nodoNumero++;
         cantNodosHijo++
 
+        if ((nodos-nodoNumero + iNivel)< nivel  ) {
+          while (nodoNumero < nodos) {
+            console.log("nodos pintados: ", nodoNumero);
+            nodes.push({id: nodoNumero, label: String(nodoNumero)});
+            //nodes.push({id: nodoNumero, label: letras[nodoNumero]}); //dibuja los nodos
+            edges.push({from: nodoNumero-1, to: nodoNumero }); // dibuja las aristas
+            iNivel++;
+            nodes[nodoNumero]["level"] = iNivel; // agrega nivel al nodo
+            nodoNumero++;
+          }
+
+        }
       }
       //console.log("j previo: ", j);
       if (cantNodosHijo === nodMax) {
