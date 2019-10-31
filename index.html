@@ -135,38 +135,40 @@
     var connectionCount = [];
 
     // randomly create some nodes and edges
-    var iNivel=0;
-    var i=0;
-    nodes.push({id: i, label: String(i)});
-    nodes[i]["level"] = iNivel;
-    iNivel++;
-    var padre=i;
+    var iNivel=0; //sirve para ir incrementando el nivel donde se dibujan los nodos
+    var nodoNumero=0; //sirve paara llevar el conteo de nodos
+    //nodes.push({id: i, label: String(i)});
+    nodes.push({id: nodoNumero, label: letras[nodoNumero]}); //dibuja el primer nodo raíz
+    nodes[nodoNumero]["level"] = iNivel; //coloca el nodo raiz en nivel 0 [iNivel]
+    iNivel++; // aumenta el nivel para dibujar los primeros nodos hijo
+    var nodoPadre=nodoNumero; //define el nodo pade como 0 o raiz
 
-    var j=0;
-    i++;
-    while ( i < nodos) {
-    var iGrado=0;
+    var cantNodosHijo=0; //cuenta el maximo de hijos por nivel, y se va reiniciando cuando el nivel aumenta
+    nodoNumero++; // incrementa para dibujar el nodo 1 (primer hijo)
+    while ( nodoNumero < nodos) { //mientras el nodo actual es menor al total de nodos
+    var iGrado=0; // va aumentando de 0 hasta el grado de hijos que debe dibujar
       while (iGrado < grado) {
-        var nodMax=Math.pow(grado, iNivel);
-        nodes.push({id: i, label: String(i)});
-        edges.push({from: padre, to: i});
-        nodes[i]["level"] = iNivel;
-        iGrado++;
-        i++;
-        j++
+        var nodMax=Math.pow(grado, iNivel); // el maximo de nodos hijos es igual  la ptencia de: grado elevado al nivel actual
+        //nodes.push({id: i, label: String(i)});
+        nodes.push({id: nodoNumero, label: letras[nodoNumero]}); //dibuja los nodos
+        edges.push({from: nodoPadre, to: nodoNumero }); // dibuja las aristas
+        nodes[nodoNumero]["level"] = iNivel; // agrega nivel al nodo
+        iGrado++; //auemneta desde cero hasta el nuero de grado
+        nodoNumero++;
+        cantNodosHijo++
 
       }
-      console.log("j previo: ", j);
-      if (j === nodMax) {
+      //console.log("j previo: ", j);
+      if (cantNodosHijo === nodMax) {
         iNivel++;
         nodmax=Math.pow(grado, iNivel);
-        console.log("nodmax ", nodmax);
-        console.log("auemnto nivel ", iNivel);
-        j=0;
+        //console.log("nodmax ", nodmax);
+        //console.log("auemnto nivel ", iNivel);
+        cantNodosHijo=0;
 
 
       }
-      padre++;
+      nodoPadre++;
 
 
 
